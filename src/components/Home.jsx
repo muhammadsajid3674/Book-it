@@ -1,6 +1,6 @@
 import React from "react";
 
-const Home = () => {
+const Home = ({ isLoading, rooms }) => {
    return (
       <section id='rooms' className='container mt-5'>
          <h2 className='mb-3 ml-2 stays-heading'>Stays in New York</h2>
@@ -10,7 +10,44 @@ const Home = () => {
             <i className='fa fa-arrow-left'></i> Back to Search
          </a>
          <div className='row'>
-            <div className='col-sm-12 col-md-6 col-lg-3 my-3'>
+            {isLoading ? (
+               <div>...loading</div>
+            ) : (
+               rooms.map(e => {
+               <div className='col-sm-12 col-md-6 col-lg-3 my-3'>
+                  <div className='card p-2'>
+                     <img
+                        className='card-img-top mx-auto'
+                        src='https://a0.muscache.com/im/pictures/2121b1e3-1d2b-4824-9268-eba1e593bc28.jpg?im_w=720'
+                     />
+                     <div className='card-body d-flex flex-column'>
+                        <h5 className='card-title'>
+                           <a href=''>
+                              {e.name}
+                           </a>
+                        </h5>
+
+                        <div className='ratings mt-auto mb-3'>
+                           <p className='card-text'>
+                              <b>${e.pricePerNight}</b> / night
+                           </p>
+
+                           <div className='rating-outer'>
+                              <div className='rating-inner'></div>
+                           </div>
+                           <span id='no_of_reviews'>({e.numOfReviews} Reviews)</span>
+                        </div>
+
+                        <button className='btn btn-block view-btn'>
+                           <a href='#'>View Details</a>
+                        </button>
+                     </div>
+                  </div>
+               </div>
+               })
+            )}
+
+            {/* <div className='col-sm-12 col-md-6 col-lg-3 my-3'>
                <div className='card p-2'>
                   <img
                      className='card-img-top mx-auto'
@@ -39,39 +76,9 @@ const Home = () => {
                      </button>
                   </div>
                </div>
-            </div>
+            </div> */}
 
-            <div className='col-sm-12 col-md-6 col-lg-3 my-3'>
-               <div className='card p-2'>
-                  <img
-                     className='card-img-top mx-auto'
-                     src='https://a0.muscache.com/im/pictures/2121b1e3-1d2b-4824-9268-eba1e593bc28.jpg?im_w=720'
-                  />
-                  <div className='card-body d-flex flex-column'>
-                     <h5 className='card-title'>
-                        <a href=''>
-                           Picturesque 2-Story Farmhouse w/Private Hot Tub
-                        </a>
-                     </h5>
-
-                     <div className='ratings mt-auto mb-3'>
-                        <p className='card-text'>
-                           <b>$12</b> / night
-                        </p>
-
-                        <div className='rating-outer'>
-                           <div className='rating-inner'></div>
-                        </div>
-                        <span id='no_of_reviews'>(5 Reviews)</span>
-                     </div>
-
-                     <button className='btn btn-block view-btn'>
-                        <a href='#'>View Details</a>
-                     </button>
-                  </div>
-               </div>
-            </div>
-
+            {/* 
             <div className='col-sm-12 col-md-6 col-lg-3 my-3'>
                <div className='card p-2'>
                   <img
@@ -132,7 +139,7 @@ const Home = () => {
                      </button>
                   </div>
                </div>
-            </div>
+            </div> */}
          </div>
       </section>
    );

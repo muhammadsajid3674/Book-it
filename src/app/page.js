@@ -1,4 +1,6 @@
+"use client";
 import Home from "@/components/Home";
+import { useRoomList } from "@/utils/hooks/useRoomList";
 
 export const metadata = {
    title: "Book it | Home Page",
@@ -6,5 +8,6 @@ export const metadata = {
 };
 
 export default function Index() {
-   return <Home />;
+   const { loading, ref, rooms } = useRoomList();
+   return <Home isLoading={loading} rooms={rooms} />;
 }
