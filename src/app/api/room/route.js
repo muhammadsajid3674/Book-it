@@ -3,14 +3,29 @@ import ApiFeatures from "@/utils/apiFeatures";
 import connectToDB from "@/utils/connectToDB";
 
 export const GET = async (req) => {
+   // ? As of Next.js 13.4 you can get search params like this from the url:
+   const queryParams = Object.fromEntries(req.nextUrl.searchParams);
    try {
-      const apiFeatures = new ApiFeatures(
-         Room.find(),
-         req.nextUrl.searchParams.get("location")
-      ).search();
-      const rooms = await apiFeatures.query;
+      await connectToDB();
+      const resPerPage = 4;
+      const roomsCount = await Room.countDocuments();
+      const apiFeatures = new ApiFeatures(Room.find(), queryParams)
+         .search()
+         .filter()
+         .pagination(resPerPage);
+
+      apiFeatures;
+      let rooms = await apiFeatures.query;
+      let filteredRoomCount = rooms.length;
+
       return new Response(
-         JSON.stringify({ success: true, count: rooms.length, rooms }),
+         JSON.stringify({
+            success: true,
+            roomsCount,
+            resPerPage,
+            filteredRoomCount,
+            rooms,
+         }),
          {
             status: 200,
          }
