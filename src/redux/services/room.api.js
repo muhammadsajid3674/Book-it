@@ -10,7 +10,10 @@ export const userApi = createApi({
       getRoom: builder.query({
          query: () => "/room",
       }),
+      getRoomById: builder.query({
+         query: (id) => `/room/${id}`,
+      }),
    }),
 });
 
-export const { useGetRoomQuery } = userApi;
+export const { useGetRoomQuery, useGetRoomByIdQuery } = userApi;

@@ -12,9 +12,9 @@ const RoomCards = ({ item, index }) => {
                height={170}
             />
             <div className='card-body d-flex flex-column'>
-               <Link href='' className='card-title h5' legacyBehavior>
-                  <a>{item.name}</a>
-               </Link>
+               <h5 className='card-title'>
+                  <Link href={`/room/${item._id}`}>{item.name}</Link>
+               </h5>
                <div className='ratings mt-auto mb-3'>
                   <p className='card-text'>
                      <span className='fw-bold'>${item.pricePerNight}</span> /
@@ -22,13 +22,16 @@ const RoomCards = ({ item, index }) => {
                   </p>
 
                   <div className='rating-outer'>
-                     <div className='rating-inner'></div>
+                     <div
+                        className='rating-inner'
+                        style={{ width: `${(item.ratings / 5) * 100}%` }}
+                     ></div>
                   </div>
                   <span id='no_of_reviews'>({item.numOfReviews} Reviews)</span>
                </div>
 
-               <button className='btn btn-block view-btn'>
-                  <a href='#'>View Details</a>
+               <button className='btn btn-block btn-outline-primary'>
+                  <Link href={`/room/${item._id}`}>View Details</Link>
                </button>
             </div>
          </div>
