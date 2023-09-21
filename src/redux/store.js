@@ -1,17 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-const { combineReducers } = require("redux");
-const { commonApi } = require("./common.api");
-
-const preloadedState = {};
-
-const rootReducer = combineReducers({
-   [commonApi.reducerPath]: commonApi.reducer,
-});
+import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import { userApi } from "./services/room.api";
 
 export const store = configureStore({
-   reducer: rootReducer,
-   middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(commonApi.middleware),
-   preloadedState,
-   devTools: process.env.NODE_ENV !== "production",
+  reducer: {
+    [userApi.reducerPath]: userApi.reducer,
+  },
+  devTools: process.env.NODE_ENV !== "production",
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({}).concat([userApi.middleware]),
 });
+
+setupListeners(store.dispatch);

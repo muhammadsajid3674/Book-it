@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Footer from "@/components/Footer";
-import { store } from "@/redux/store";
 import { Providers } from "@/redux/provider";
 
 const inter = Inter({ subsets: ["latin"] });
