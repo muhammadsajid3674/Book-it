@@ -6,7 +6,7 @@ const Login = ({ reference, onSubmit }) => {
                <form className='shadow-lg' onSubmit={onSubmit}>
                   <h1 className='mb-3'>Login</h1>
                   <div className='form-group'>
-                     <label for='email_field'>Email</label>
+                     <label htmlFor='email_field'>Email</label>
                      <input
                         type='email'
                         id='email_field'
@@ -16,12 +16,12 @@ const Login = ({ reference, onSubmit }) => {
                   </div>
 
                   <div className='form-group'>
-                     <label for='password_field'>Password</label>
+                     <label htmlFor='password_field'>Password</label>
                      <input
                         type='password'
                         id='password_field'
                         className='form-control'
-                        ref={reference.emailRef}
+                        ref={reference.passwordRef}
                      />
                   </div>
 

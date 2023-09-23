@@ -2,6 +2,7 @@
 import Loader from "@/components/Loader";
 import RoomCards from "@/components/Room/RoomCards";
 import { useGetRoomQuery } from "@/redux/services/room.api";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Pagination from "react-js-pagination";
@@ -12,6 +13,8 @@ export const metadata = {
 };
 
 export default function Index({ searchParams }) {
+   const {data: session} = useSession()
+   console.log('session :>> ', session);
    const router = useRouter();
    let {
       page = 1,

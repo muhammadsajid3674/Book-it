@@ -1,7 +1,7 @@
 "use client";
 import Login from "@/components/auth/login";
 import { useRef } from "react";
-import { signIn } from "next-auth/client";
+import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
