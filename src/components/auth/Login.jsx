@@ -1,4 +1,7 @@
-const Login = ({ reference, onSubmit }) => {
+import Link from "next/link";
+import Loader from "../Loader";
+
+const Login = ({ reference, onSubmit, loading }) => {
    return (
       <div className='container container-fluid'>
          <div className='row wrapper'>
@@ -25,21 +28,21 @@ const Login = ({ reference, onSubmit }) => {
                      />
                   </div>
 
-                  <a href='#' className='float-right mb-4'>
+                  <Link href={"/"} className='float-right mb-4'>
                      Forgot Password?
-                  </a>
+                  </Link>
 
                   <button
                      id='login_button'
                      type='submit'
                      className='btn btn-block py-3'
                   >
-                     LOGIN
+                     {loading ? <Loader /> : "LOGIN"}
                   </button>
 
-                  <a href='#' className='float-right mt-3'>
+                  <Link href={"/auth/register"} className='float-right mt-3'>
                      New User?
-                  </a>
+                  </Link>
                </form>
             </div>
          </div>

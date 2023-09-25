@@ -13,15 +13,9 @@ export const metadata = {
 };
 
 export default function Index({ searchParams }) {
-   const {data: session} = useSession()
-   console.log('session :>> ', session);
+   const { data: session } = useSession();
    const router = useRouter();
-   let {
-      page = 1,
-      location = "",
-      guestCapacity,
-      category = "",
-   } = searchParams;
+   let { page = 1, location = "", guestCapacity, category = "" } = searchParams;
    page = Number(page);
    guestCapacity = Number(guestCapacity);
    const handlePagination = (pageNum) => {
@@ -39,7 +33,6 @@ export default function Index({ searchParams }) {
             <h2 className='mb-3 ml-2 stays-heading'>Stays in New York</h2>
 
             <Link href='/search' className='ml-2 back-to-search'>
-               {" "}
                <i className='fa fa-arrow-left'></i> Back to Search
             </Link>
             {error ? (

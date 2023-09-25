@@ -11,22 +11,21 @@ const handler = nextAuth({
    providers: [
       CredentialsProviders({
          async authorize(credentials) {
-               await connectToDB();
-               const { email, password } = credentials;
-   
-               //* check if email and password is entered
-               if (!email || !password)
-                  new Response("Please enter email and password", { status: 400 });
-   
-               //* Find user in the database
-               const user = await User.findOne({ email }).select("+password");
-               if (!user) new Response("Invalid Email and Password");
-   
-               //* Check if password matched
-               const isPasswordCorrect = await user.comparePassword(password);
-               if (!isPasswordCorrect) new Response("Incorrect Password");
-   
-               return Promise.resolve(user);
+            await connectToDB();
+            const { email, password } = credentials;
+            //* check if email and password is entered
+            if (!email || !password)
+               throw new Error("Please enter email and password");
+
+            //* Find user in the database
+            const user = await User.findOne({ email }).select("+password");
+            if (!user) throw new Error("Invalid Email and Password");
+
+            //* Check if password matched
+            const isPasswordCorrect = await user.comparePassword(password);
+            if (!isPasswordCorrect) throw new Error("Incorrect Password");
+
+            return Promise.resolve(user);
          },
       }),
    ],
@@ -41,6 +40,5 @@ const handler = nextAuth({
       },
    },
 });
-
 
 export { handler as GET, handler as POST };
