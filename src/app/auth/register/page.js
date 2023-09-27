@@ -11,8 +11,7 @@ const Index = () => {
    const [avatarPreview, setAvatarPreview] = useState(
       "/images/default_avatar.png"
    );
-   const [registerUser, { isLoading, data, error, isError }] =
-      useRegisterUserMutation();
+   const [registerUser, { isLoading }] = useRegisterUserMutation();
    const nameRef = useRef();
    const emailRef = useRef();
    const passwordRef = useRef();

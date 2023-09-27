@@ -22,7 +22,10 @@ export const userApi = createApi({
             };
          },
       }),
+      currentUser: builder.query({
+         query: () => `/me`,
+      }),
    }),
 });
 
-export const { useRegisterUserMutation } = userApi;
+export const { useRegisterUserMutation, useCurrentUserQuery } = userApi;

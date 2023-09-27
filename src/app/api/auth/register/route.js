@@ -33,7 +33,6 @@ export const POST = async (req) => {
          status: 201,
       });
    } catch (error) {
-      console.log("error :>> ", error);
       return new Response(
          JSON.stringify({ success: false, error: error.message }),
          { status: 500 }

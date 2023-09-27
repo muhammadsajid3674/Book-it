@@ -1,41 +1,51 @@
-import User from "@/models/user";
-import connectToDB from "@/utils/connectToDB";
 import nextAuth from "next-auth";
 import CredentialsProviders from "next-auth/providers/credentials";
+import { setCookie } from "nookies";
 
 const handler = nextAuth({
    session: {
-      jwt: true,
+      strategy: "jwt",
    },
-   secret: process.env.NEXTAUTH_URL,
+   secret: process.env.NEXTAUTH_SECRET,
    providers: [
       CredentialsProviders({
          async authorize(credentials) {
-            await connectToDB();
             const { email, password } = credentials;
-            //* check if email and password is entered
-            if (!email || !password)
-               throw new Error("Please enter email and password");
-
-            //* Find user in the database
-            const user = await User.findOne({ email }).select("+password");
-            if (!user) throw new Error("Invalid Email and Password");
-
-            //* Check if password matched
-            const isPasswordCorrect = await user.comparePassword(password);
-            if (!isPasswordCorrect) throw new Error("Incorrect Password");
-
+            const res = await fetch(`${process?.env?.BASE_URL}/auth/login`, {
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+               cache: "force-cache",
+               body: JSON.stringify({
+                  email,
+                  password,
+               }),
+            });
+            const user = await res.json();
+            setCookie({ res }, "user", JSON.stringify(user), {
+               maxAge: 2 * 24 * 60 * 60,
+               path: "/",
+               httpOnly: true,
+            });
+            console.log("user :>> ", user);
             return Promise.resolve(user);
          },
       }),
    ],
    callbacks: {
-      jwt: async (token, user) => {
-         user && (token.user = user);
-         return Promise.resolve(token);
+      jwt: async ({ token, user }) => {
+         return { ...token, ...user };
       },
-      session: async (session, res) => {
-         session.user = res.user;
+      session: async ({ session, token }) => {
+         const accessTokenData = JSON.parse(
+            atob(token.token.split(".")?.at(1))
+         );
+         session.user = accessTokenData;
+         token.accessTokenExpires = accessTokenData.exp;
+
+         session.token = token?.token;
+
          return Promise.resolve(session);
       },
    },

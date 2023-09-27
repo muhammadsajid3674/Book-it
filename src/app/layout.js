@@ -6,7 +6,6 @@ import { Providers } from "@/redux/provider";
 import CustomToast from "@/components/CustomToast";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,12 +31,10 @@ export default function RootLayout({ children }) {
          </head>
          <body className={inter.className}>
             <Providers>
-               <SessionProvider>
-                  <Header />
-                  <CustomToast />
-                  {children}
-                  <Footer />
-               </SessionProvider>
+               <Header/>
+               <CustomToast />
+               {children}
+               <Footer />
             </Providers>
             <script
                src='https://code.jquery.com/jquery-3.5.1.slim.min.js'
