@@ -1,7 +1,6 @@
 import User from "@/models/user";
 import connectToDB from "@/utils/connectToDB";
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
 
 //* Setup Cloudinary Config
 cloudinary.config({

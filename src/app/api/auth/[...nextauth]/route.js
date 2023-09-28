@@ -9,26 +9,35 @@ const handler = nextAuth({
    secret: process.env.NEXTAUTH_SECRET,
    providers: [
       CredentialsProviders({
+         name: "Credentials",
+         credentials: {
+            email: {
+               label: "Email",
+               type: "text",
+               placeholder: "jsmith",
+            },
+            password: { label: "Password", type: "password" },
+         },
          async authorize(credentials) {
             const { email, password } = credentials;
+            console.log("credentials :>> ", { email, password });
             const res = await fetch(`${process?.env?.BASE_URL}/auth/login`, {
                method: "POST",
                headers: {
                   "Content-Type": "application/json",
                },
-               cache: "force-cache",
                body: JSON.stringify({
                   email,
                   password,
                }),
             });
             const user = await res.json();
+            console.log("user :>> ", user);
             setCookie({ res }, "user", JSON.stringify(user), {
                maxAge: 2 * 24 * 60 * 60,
                path: "/",
                httpOnly: true,
             });
-            console.log("user :>> ", user);
             return Promise.resolve(user);
          },
       }),

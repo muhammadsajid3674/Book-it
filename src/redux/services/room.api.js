@@ -7,7 +7,6 @@ export const roomApi = createApi({
       baseUrl: process.env.BASE_URL,
       prepareHeaders: (headers) => {
          headers.set("Content-Type", "application/json;charset=UTF-8");
-         headers.set("Authorization", "anonymous");
 
          return headers;
       },

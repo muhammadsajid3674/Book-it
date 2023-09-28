@@ -13,18 +13,19 @@ const Index = () => {
    const submitHandler = async (e) => {
       e.preventDefault();
       setIsLoading(true);
-      const result = await signIn("credentials", {
+      await signIn("credentials", {
          redirect: false,
          email: emailRef.current.value,
          password: passwordRef.current.value,
+      }).then((res) => {
+         console.log('res :>> ', res);
+         // if (ok) {
+
+         // } else {
+         //    console.log(error);
+         //    toast.error("Credentials do not match!");
+         // }
       });
-      setIsLoading(false);
-      console.log('result :>> ', result);
-      if (result.error) {
-         toast.error(result.error);
-      } else {
-         router.push("/");
-      }
    };
    return (
       <Login

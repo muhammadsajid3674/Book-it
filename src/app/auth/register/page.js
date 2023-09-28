@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Register from "@/components/auth/Register";
 import { useRegisterUserMutation } from "@/redux/services/user.api";
 import { toast } from "react-toastify";

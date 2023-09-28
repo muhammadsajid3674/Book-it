@@ -7,7 +7,6 @@ export const userApi = createApi({
       baseUrl: process.env.BASE_URL,
       prepareHeaders: (headers) => {
          headers.set("Content-Type", "application/json;charset=UTF-8");
-         headers.set("Authorization", "anonymous");
 
          return headers;
       },
@@ -25,7 +24,41 @@ export const userApi = createApi({
       currentUser: builder.query({
          query: () => `/me`,
       }),
+      updateProfile: builder.mutation({
+         query: (body) => {
+            return {
+               url: "/me/update",
+               method: "PATCH",
+               body,
+            };
+         },
+      }),
+      forgotPassword: builder.mutation({
+         query: (body) => {
+            return {
+               url: "/password/forgot",
+               method: "PATCH",
+               body,
+            };
+         },
+      }),
+      resetPassword: builder.mutation({
+         query: (body) => {
+            console.log("body :>> ", body);
+            return {
+               url: `/password/reset/?token=${body?.token}`,
+               method: "PATCH",
+               body,
+            };
+         },
+      }),
    }),
 });
 
-export const { useRegisterUserMutation, useCurrentUserQuery } = userApi;
+export const {
+   useRegisterUserMutation,
+   useCurrentUserQuery,
+   useUpdateProfileMutation,
+   useForgotPasswordMutation,
+   useResetPasswordMutation,
+} = userApi;
