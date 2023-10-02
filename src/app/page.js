@@ -1,9 +1,10 @@
 "use client";
 import Loader from "@/components/Loader";
 import RoomCards from "@/components/Room/RoomCards";
-import { useGetRoomQuery } from "@/redux/services/room.api";
+import { useGetRoomQuery, usePrefetch } from "@/redux/services/room.api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
 import Pagination from "react-js-pagination";
 
 export const metadata = {
@@ -16,15 +17,31 @@ export default function Index({ searchParams }) {
    let { page = 1, location = "", guestCapacity, category = "" } = searchParams;
    page = Number(page);
    guestCapacity = Number(guestCapacity);
+
    const handlePagination = (pageNum) => {
       router.push(`/?page=${pageNum}`);
    };
-   const { isLoading, data, error } = useGetRoomQuery({
+
+   const { isLoading, data, isError, isFetching } = useGetRoomQuery({
       page,
       location,
       guestCapacity,
       category,
    });
+
+   const prefetchPage = usePrefetch("getRoom");
+   const prefetchNext = useCallback(() => {
+      prefetchPage(page + 1);
+   }, [prefetchPage, page]);
+   useEffect(() => {
+      if (page !== data?.roomsCount) {
+         prefetchNext();
+      }
+   }, [data, page, prefetchNext]);
+
+   if (isError) return <div>An error has occurred!</div>;
+
+   if (isLoading) return <Loader />;
    return (
       <>
          <section className='container mt-5'>
@@ -33,17 +50,15 @@ export default function Index({ searchParams }) {
             <Link href='/search' className='ml-2 back-to-search'>
                <i className='fa fa-arrow-left'></i> Back to Search
             </Link>
-            {error ? (
-               <p>Oh no, there was an error</p>
-            ) : isLoading ? (
-               <Loader />
-            ) : data ? (
-               <div className='row g-5'>
-                  {data?.rooms?.map((e, i) => (
-                     <RoomCards index={i} item={e} />
-                  ))}
-               </div>
-            ) : null}
+            <div className='row justify-content-center'>
+               {!isFetching && data ? (
+                  <div className='row g-5'>
+                     {data?.rooms?.map((e, i) => (
+                        <RoomCards index={i} item={e} />
+                     ))}
+                  </div>
+               ) : null}
+            </div>
          </section>
          {data?.resPerPage <= data?.filteredRoomCount && (
             <div className='d-flex justify-center'>

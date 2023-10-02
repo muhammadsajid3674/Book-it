@@ -16,6 +16,7 @@ export const POST = async (req) => {
       //* Check if password matched
       const isPasswordCorrect = await user.comparePassword(password);
       if (!isPasswordCorrect) throw new Error("Incorrect Password");
+      
       return new Response(JSON.stringify({ success: true, user }), {
          status: 200,
       });

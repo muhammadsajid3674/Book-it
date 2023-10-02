@@ -21,6 +21,15 @@ export const userApi = createApi({
             };
          },
       }),
+      login: builder.mutation({
+         query: (body) => {
+            return {
+               url: "/auth/login",
+               method: "POST",
+               body,
+            };
+         },
+      }),
       currentUser: builder.query({
          query: () => `/me`,
       }),
@@ -56,9 +65,11 @@ export const userApi = createApi({
 });
 
 export const {
+   usePrefetch,
    useRegisterUserMutation,
    useCurrentUserQuery,
    useUpdateProfileMutation,
    useForgotPasswordMutation,
    useResetPasswordMutation,
+   useLoginMutation,
 } = userApi;

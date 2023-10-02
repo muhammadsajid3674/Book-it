@@ -27,4 +27,4 @@ export const roomApi = createApi({
    }),
 });
 
-export const { useGetRoomQuery, useGetRoomByIdQuery } = roomApi;
+export const { useGetRoomQuery, useGetRoomByIdQuery, usePrefetch } = roomApi;

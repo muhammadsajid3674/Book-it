@@ -2,12 +2,13 @@
 import { useRef } from "react";
 import ResetPassword from "@/components/user/ResetPassword";
 import { useResetPasswordMutation } from "@/redux/services/user.api";
-import { signOut } from "next-auth/react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const page = ({ params }) => {
    const passwordRef = useRef();
    const confirmPasswordRef = useRef();
+   const router = useRouter();
    const [resetPassword, { isLoading }] = useResetPasswordMutation();
    const handleSubmit = async (e) => {
       e.preventDefault();
@@ -19,7 +20,7 @@ const page = ({ params }) => {
          .unwrap()
          .then(async () => {
             toast.success("Password updated successfully");
-            await signOut();
+            return router.push("/auth/login");
          })
          .catch((err) => toast.error(err?.data?.error));
    };

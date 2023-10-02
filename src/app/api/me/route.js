@@ -10,7 +10,7 @@ export const GET = async (req) => {
    });
    try {
       await connectToDB();
-      const user = await User.findById(session?.user?._id).select("-password");
+      const user = await User.findById(session?._doc?._id).select("-password");
       if (!user)
          return new Response(
             JSON.stringify({ success: false, error: "user not found" }),

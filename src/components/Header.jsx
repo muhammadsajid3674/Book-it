@@ -1,12 +1,16 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { useCurrentUserQuery } from "@/redux/services/user.api";
+import React, { useEffect } from "react";
+import { useCurrentUserQuery, usePrefetch } from "@/redux/services/user.api";
 import { signOut } from "next-auth/react";
 
 const Header = () => {
-   const { data, isLoading } = useCurrentUserQuery();
+   const prefetchPage = usePrefetch("currentUser");
+   const { data, isLoading } = useCurrentUserQuery(null);
+   useEffect(() => {
+      prefetchPage();
+   }, [data]);
    return (
       <nav className='navbar row justify-content-center sticky-top'>
          <div className='container'>
