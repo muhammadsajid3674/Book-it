@@ -4,7 +4,7 @@ import { useGetRoomByIdQuery } from "@/redux/services/room.api";
 
 const RoomDetail = ({ params }) => {
    const { data } = useGetRoomByIdQuery(params?.id);
-   return <RoomDetailCmp data={data} />;
+   return <RoomDetailCmp data={data} params={params} />;
 };
 
 export default RoomDetail;

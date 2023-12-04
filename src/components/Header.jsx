@@ -3,9 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useCurrentUserQuery, usePrefetch } from "@/redux/services/user.api";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const Header = () => {
+   const { data: session, status } = useSession()
+   console.log('session :>> ', session);
    const prefetchPage = usePrefetch("currentUser");
    const { data, isLoading } = useCurrentUserQuery(null);
    useEffect(() => {
@@ -30,7 +32,7 @@ const Header = () => {
             </div>
 
             <div className='col-3 mt-3 mt-md-0 text-center'>
-               {data ? (
+               {session && status == 'authenticated' ? (
                   <div className='ml-4 dropdown'>
                      <a
                         className='btn dropdown-toggle mr-4'
@@ -42,13 +44,13 @@ const Header = () => {
                         <figure className='avatar avatar-nav'>
                            <img
                               src={
-                                 data?.user?.avatar && data?.user?.avatar?.url
+                                 session?.user?.avatar && session?.user?.avatar?.url
                               }
-                              alt={data?.user && data?.user?.name}
+                              alt={session?.user && session?.user?.name}
                               className='rounded-circle'
                            />
                         </figure>
-                        <span>{data?.user && data?.user?.name}</span>
+                        <span>{session?.user && session?.user?.name}</span>
                      </a>
                      <div
                         className='dropdown-menu'
