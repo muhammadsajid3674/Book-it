@@ -20,6 +20,19 @@ export const bookingApi = createApi({
                 };
             },
         }),
+        getUserBookings: builder.query({
+            query: (q) => {
+                let link = `/booking`;
+                return link;
+            },
+        }),
+        getBookingDetails: builder.query({
+            query: (q) => {
+                const { bookingId } = q
+                let link = `/booking/${bookingId}`;
+                return link;
+            },
+        }),
         checkRoomBookingAvailability: builder.query({
             query: (q) => {
                 let { roomId, checkInDate, checkOutDate } = q;
@@ -27,7 +40,14 @@ export const bookingApi = createApi({
                 return link;
             },
         }),
+        checkRoomBookedDates: builder.query({
+            query: (q) => {
+                let { roomId } = q;
+                let link = `/booking/check-booked-dates?roomId=${roomId}`;
+                return link;
+            },
+        }),
     }),
 });
 
-export const { useAddNewBookingMutation, useLazyCheckRoomBookingAvailabilityQuery, usePrefetch } = bookingApi;
+export const { useAddNewBookingMutation, useLazyCheckRoomBookingAvailabilityQuery, useLazyCheckRoomBookedDatesQuery, useGetUserBookingsQuery, useGetBookingDetailsQuery, usePrefetch } = bookingApi;

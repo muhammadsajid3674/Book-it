@@ -53,7 +53,6 @@ export const userApi = createApi({
       }),
       resetPassword: builder.mutation({
          query: (body) => {
-            console.log("body :>> ", body);
             return {
                url: `/password/reset/?token=${body?.token}`,
                method: "PATCH",

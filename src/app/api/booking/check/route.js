@@ -23,9 +23,9 @@ export const GET = async (req) => {
         });
         let isAvailable;
         if (booking && booking.length === 0) {
-            isAvailable = false;
-        } else {
             isAvailable = true;
+        } else {
+            isAvailable = false;
         }
         return new Response(JSON.stringify({ success: true, isAvailable }), {
             status: 201,

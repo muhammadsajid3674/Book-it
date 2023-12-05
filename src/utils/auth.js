@@ -32,14 +32,12 @@ export const authOptions = {
                 if (!response.ok) {
                     throw new Error(result.message);
                 }
-                console.log('result :>> ', result);
                 return result?.user;
             },
         }),
     ],
     callbacks: {
         session({ session, token }) {
-            console.log('token :>> ', token);
             // session.user.token = token.accessToken;
             session.user.id = token.id;
             session.user.name = token.name;
@@ -48,7 +46,6 @@ export const authOptions = {
             return session;
         },
         jwt({ token, trigger, session, account, user }) {
-            console.log('user :jwt>> ', user);
             if (account) {
                 token.accessToken = account.access_token;
                 if ("_id" in user) token.id = user?._id;

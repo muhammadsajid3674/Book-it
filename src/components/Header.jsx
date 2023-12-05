@@ -4,12 +4,14 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { useCurrentUserQuery, usePrefetch } from "@/redux/services/user.api";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
    const { data: session, status } = useSession()
-   console.log('session :>> ', session);
+   const router = useRouter()
    const prefetchPage = usePrefetch("currentUser");
    const { data, isLoading } = useCurrentUserQuery(null);
+
    useEffect(() => {
       prefetchPage();
    }, [data]);
@@ -73,12 +75,13 @@ const Header = () => {
                   </div>
                ) : (
                   !isLoading && (
-                     <Link
-                        href={"/auth/login"}
+                     <button
+
                         className='btn btn-danger px-4 text-white login-header-btn float-right'
+                        onClick={() => { router.push('/auth/login') }}
                      >
                         Login
-                     </Link>
+                     </button>
                   )
                )}
             </div>

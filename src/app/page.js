@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import Pagination from "react-js-pagination";
 
-export const metadata = {
-   title: "Book it | Home Page",
-   description: "Book Best Hotels for your Holiday",
-};
+// export const metadata = {
+//    title: "Book it | Home Page",
+//    description: "Book Best Hotels for your Holiday",
+// };
 
 export default function Index({ searchParams }) {
    const router = useRouter();

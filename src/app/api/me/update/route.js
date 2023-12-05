@@ -19,7 +19,7 @@ export const PATCH = async (req) => {
    const { name, email, password, avatar } = await req.json();
    try {
       await connectToDB();
-      const user = await User.findById(session?.user?._id).select("+password");
+      const user = await User.findById(session?.id).select("+password");
       if (!user)
          return new Response(
             JSON.stringify({ success: false, error: "user not found" }),

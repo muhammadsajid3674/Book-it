@@ -1,20 +1,23 @@
 'use client'
 import Image from "next/image";
 import RoomFeatures from "./RoomFeatures";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAddNewBookingMutation, useLazyCheckRoomBookedDatesQuery, useLazyCheckRoomBookingAvailabilityQuery } from "@/redux/services/booking.api";
+import { useSession } from "next-auth/react";
 import ReactDatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
-import axios from "axios";
-import { useAddNewBookingMutation, useLazyCheckRoomBookingAvailabilityQuery } from "@/redux/services/booking.api";
-import { useSession } from "next-auth/react";
 
 const RoomDetailCmp = ({ data, params }) => {
-   const { data: user } = useSession()
+   const { data: session, status } = useSession()
    const [addNewBooking] = useAddNewBookingMutation()
    const [checkInDate, setCheckInDate] = useState(null)
    const [checkOutDate, setCheckOutDate] = useState(null)
    const [daysOfStay, setDaysOfStay] = useState(null)
    const [checkRoomBookingAvailability, { data: result }] = useLazyCheckRoomBookingAvailabilityQuery()
+   const [checkRoomBookedDates, { data: roomDates }] = useLazyCheckRoomBookedDatesQuery()
+
+   let excludedDates = []
+   roomDates?.bookedDates.forEach(date => excludedDates.push(new Date(date)))
 
    const handleDateRange = (dates) => {
       const [checkInDate, checkOutDate] = dates
@@ -42,8 +45,13 @@ const RoomDetailCmp = ({ data, params }) => {
       const result = await addNewBooking(bookingData)
       console.log('result :>> ', result);
    }
+
+   useEffect(() => {
+      checkRoomBookedDates({ roomId: params.id })
+   }, [status])
+
    return (
-      <div className='container container-fluid'>
+      <div className='container'>
          <h2 className='mt-5'>{data?.room?.name}</h2>
          <div className='ratings mt-auto mb-3'>
             <div className='rating-outer'>
@@ -74,12 +82,11 @@ const RoomDetailCmp = ({ data, params }) => {
                   <p className="mt-5 mb-3">
                      Pick Check In & Check out date
                   </p>
-                  <ReactDatePicker className="w-100" selected={checkInDate} onChange={handleDateRange} startDate={checkInDate} endDate={checkOutDate} selectsRange inline />
-                  {result?.isAvailable && <div className="alert alert-success my-3 font-bold">Room is available. Book now.</div>}
-                  {!result?.isAvailable && <div className="alert alert-danger my-3 font-bold">Room is not available. Try different dates.</div>}
-                  {result?.isAvailable && !user && <div className="alert alert-danger my-3 font-bold">Login to book</div>}
-                  {result?.isAvailable && user && <button className='btn btn-block py-3 booking-btn' onClick={newBooking}>Pay</button>
-                  }
+                  <ReactDatePicker className="w-100" selected={checkInDate} onChange={handleDateRange} startDate={checkInDate} endDate={checkOutDate} excludeDates={excludedDates} selectsRange inline />
+                  {result?.isAvailable === true && <div className="alert alert-success my-3 font-bold">Room is available. Book now.</div>}
+                  {result?.isAvailable === false && <div className="alert alert-danger my-3 font-bold">Room is not available. Try different dates.</div>}
+                  {result?.isAvailable && status == 'unauthenticated' && <div className="alert alert-danger my-3 font-bold">Login to book</div>}
+                  {result?.isAvailable && status == 'authenticated' && <button className='btn btn-danger btn-block py-3 booking-btn' onClick={newBooking}>Pay</button>}
                </div>
             </div>
          </div>
