@@ -6,6 +6,7 @@ import { useAddNewBookingMutation, useLazyCheckRoomBookedDatesQuery, useLazyChec
 import { useSession } from "next-auth/react";
 import ReactDatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
+import getStripe from "@/utils/getStripe";
 
 const RoomDetailCmp = ({ data, params }) => {
    const { data: session, status } = useSession()
@@ -13,6 +14,7 @@ const RoomDetailCmp = ({ data, params }) => {
    const [checkInDate, setCheckInDate] = useState(null)
    const [checkOutDate, setCheckOutDate] = useState(null)
    const [daysOfStay, setDaysOfStay] = useState(null)
+   const [paymentLoading, setPaymentLoading] = useState(false)
    const [checkRoomBookingAvailability, { data: result }] = useLazyCheckRoomBookingAvailabilityQuery()
    const [checkRoomBookedDates, { data: roomDates }] = useLazyCheckRoomBookedDatesQuery()
 
@@ -45,6 +47,24 @@ const RoomDetailCmp = ({ data, params }) => {
       const result = await addNewBooking(bookingData)
       console.log('result :>> ', result);
    }
+
+   const bookRoom = async (id, pricePerNight) => {
+      setPaymentLoading(true);
+      const amount = pricePerNight * daysOfStay;
+      try {
+         const link = `${process.env.BASE_URL}/checkout-session/${id}?amount=${amount}&checkInDate=${checkInDate.toISOString()}&checkOutDate=${checkOutDate.toISOString()}&daysOfStay=${daysOfStay}`
+         const response = await fetch(link)
+         const result = await response.json()
+         const stripe = await getStripe()
+         stripe.redirectToCheckout({ sessionId: result?.data?.id })
+         console.log('result :>> ', result);
+         setPaymentLoading(false);
+      } catch (error) {
+         setPaymentLoading(false);
+         console.log('error :>> ', error.message);
+      }
+   }
+
 
    useEffect(() => {
       checkRoomBookedDates({ roomId: params.id })
@@ -86,7 +106,7 @@ const RoomDetailCmp = ({ data, params }) => {
                   {result?.isAvailable === true && <div className="alert alert-success my-3 font-bold">Room is available. Book now.</div>}
                   {result?.isAvailable === false && <div className="alert alert-danger my-3 font-bold">Room is not available. Try different dates.</div>}
                   {result?.isAvailable && status == 'unauthenticated' && <div className="alert alert-danger my-3 font-bold">Login to book</div>}
-                  {result?.isAvailable && status == 'authenticated' && <button className='btn btn-danger btn-block py-3 booking-btn' onClick={newBooking}>Pay</button>}
+                  {result?.isAvailable && status == 'authenticated' && <button className='btn btn-danger btn-block py-3 booking-btn' disabled={paymentLoading} onClick={() => bookRoom(data?.room?._id, data?.room?.pricePerNight)}>Pay - ${data?.room?.pricePerNight * daysOfStay}</button>}
                </div>
             </div>
          </div>
